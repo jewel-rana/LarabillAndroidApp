@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText Password;
     private Button loginButton;
     private int counter = 0;
+    private TextView loginAttempt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,26 +30,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Email = (EditText) findViewById(R.id.loginEmail);
         Password = (EditText) findViewById(R.id.loginPassword);
         loginButton = (Button) findViewById(R.id.loginBtn);
+        loginAttempt = (TextView) findViewById(R.id.loginAttempt);
 
         loginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                validate(Email.getText().toString(), "123456");
+                validate(Email.getText().toString(), Password.getText().toString());
             }
         });
 
     }
 
     private void validate(String userEmail, String userPassword) {
-        if((userEmail == "admin") && (userPassword == "123456" )){
-            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-            startActivity(intent);
+        Log.d("TAB", userEmail);
+        if(userEmail=="admin" && userPassword=="123456"){
+            Intent i = new Intent(this, SecondActivity.class);
+            startActivity(i);
         } else {
             Email.setFocusable(true);
             Password.setFocusable(true);
 
             counter++;
-
+            loginAttempt.setText("Faild login attempt: " + String.valueOf(counter));
             if( counter == 5 ){
                 loginButton.setEnabled(false);
             }
