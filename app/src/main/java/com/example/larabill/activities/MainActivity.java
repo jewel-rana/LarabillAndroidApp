@@ -1,4 +1,4 @@
-package com.example.larabill;
+package com.example.larabill.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,9 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import static com.example.larabill.R.id.loginBtn;
-import static com.example.larabill.R.id.loginEmail;
-import static com.example.larabill.R.id.loginPassword;
+import com.example.larabill.R;
+import com.example.larabill.models.LoginResponse;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,8 +45,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void validate(String userEmail, String userPassword) {
         Log.d("TAB", userEmail);
-        if(userEmail=="admin" && userPassword=="123456"){
-            Intent i = new Intent(this, SecondActivity.class);
+        if(userEmail.equals("admin") && userPassword.equals("123456")){
+            Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
         } else {
             Email.setFocusable(true);
