@@ -105,8 +105,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                Log.d("Debug:", response.body().toString());
                 LoginResponse loginResponse = response.body();
-
                 if(loginResponse.isSuccess()) {
 
                     //save user
