@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.telecom.Call;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -18,12 +18,15 @@ import com.example.larabill.api.Client;
 import com.example.larabill.models.LoginResponse;
 import com.example.larabill.models.User;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+
+import static android.widget.Toast.*;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -65,41 +68,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String password = Password.getText().toString().trim();
 
         validate(email, password);
-
-        /*
-        Call<User> call = Api.userLogin(
-
-                @Field("email") String email,
-                @Field("password") String password
-        );
-
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(retrofit2.Call call, Response response) {
-
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call call, Throwable t) {
-
-            }
-        });
-        */
-        Client client = new Client();
-        Api api = client.getClient().create(Api.class);
-
-        Call<LoginResponse> call = api.userLogin(email, password);
-        ((retrofit2.Call) call).enqueue(new Callback() {
-            @Override
-            public void onResponse(retrofit2.Call call, Response response) {
-
-            }
-
-            @Override
-            public void onFailure(retrofit2.Call call, Throwable t) {
-
-            }
-        });
     }
 
     private void validate(String email, String password){
@@ -127,6 +95,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Password.requestFocus();
             return;
         }
+
+        Toast.makeText(this, "Hello", LENGTH_LONG).show();
+
+        Client client = new Client();
+        Api api = client.getClient().create(Api.class);
+
+        Call<LoginResponse> call = api.userLogin(email, password);
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                LoginResponse loginResponse = response.body();
+
+                if(loginResponse.isSuccess()) {
+
+                    //save user
+                    //make profile
+                    //sqlite handle
+                    Toast.makeText(LoginActivity.this, "Login success", LENGTH_LONG).show();
+
+                } else {
+                    makeText(LoginActivity.this, loginResponse.getMessage(), LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Log.d("ERROR", t.getMessage());
+            }
+        });
     }
 
     @Override

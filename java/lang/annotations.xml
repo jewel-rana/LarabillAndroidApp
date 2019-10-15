@@ -1,0 +1,5 @@
+<root>
+    <item name='java.lang.Throwable java.lang.String getMessage()'>
+        <annotation name='org.jetbrains.annotations.Nullable' />
+    </item>
+</root>
