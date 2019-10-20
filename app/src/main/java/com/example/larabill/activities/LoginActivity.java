@@ -18,6 +18,8 @@ import com.example.larabill.api.Client;
 import com.example.larabill.models.LoginResponse;
 import com.example.larabill.models.User;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -96,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        Toast.makeText(this, "Hello", LENGTH_LONG).show();
+//        Toast.makeText(this, "Hello", LENGTH_LONG).show();
 
         Client client = new Client();
         Api api = client.getClient().create(Api.class);
@@ -105,23 +107,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                Log.d("Debug:", response.body().toString());
-                LoginResponse loginResponse = response.body();
-                if(loginResponse.isSuccess()) {
-
-                    //save user
-                    //make profile
-                    //sqlite handle
-                    Toast.makeText(LoginActivity.this, "Login success", LENGTH_LONG).show();
-
+                if(response.code() == 200 ) {
+                    LoginResponse loginResponse = response.body();
+                    Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
-                    makeText(LoginActivity.this, loginResponse.getMessage(), LENGTH_LONG).show();
+                    String s = null;
+                    try {
+                        s = response.errorBody().string();
+                        Toast.makeText(LoginActivity.this, s, Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(LoginActivity.this, s, Toast.LENGTH_LONG).show();
                 }
+//                Log.d("Debug:", response.body().toString());
+//                LoginResponse loginResponse = response.body().string();
+//                if(loginResponse.isSuccess()) {
+//
+//                    //save user
+//                    //make profile
+//                    //sqlite handle
+//                    Toast.makeText(LoginActivity.this, "Login success", LENGTH_LONG).show();
+//
+//                } else {
+//                    makeText(LoginActivity.this, loginResponse.getMessage(), LENGTH_LONG).show();
+//                }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.d("ERROR", t.getMessage());
+                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
